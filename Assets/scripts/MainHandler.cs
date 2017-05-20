@@ -37,12 +37,12 @@ public class MainHandler : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        levelIndex = 0;
+        levelIndex = 2;
         startGameplay = false;
         emptySlider = false;
         moveBoardY = false;
         boards = GameObject.Find("BoardsHolder").GetComponent<BoardsHolder>();
-        boards.boards[0].SetActive(true);
+        boards.boards[levelIndex].SetActive(true);
         //hole = GameObject.Find("HoleHandler").GetComponent<HoleCollider>();
         //hole = boards.boards[0].GetComponentInChildren<HoleCollider>();
         aSources = GetComponents<AudioSource>();

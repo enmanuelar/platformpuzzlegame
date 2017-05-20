@@ -36,7 +36,6 @@ public class ObstacleHandler : MonoBehaviour {
             light.intensity = Mathf.Lerp(minIntensity, maxIntensity, 2.0f);
             audio.Play();
         }
-
     }
 
     void ReduceIntensity()
