@@ -40,7 +40,7 @@ public class MainHandler : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        levelIndex = 2;
+        levelIndex = 0;
         startGameplay = false;
         emptySlider = false;
         moveBoardY = false;
