@@ -5,7 +5,6 @@ public class BoardsHolder : MonoBehaviour {
 
     public GameObject[] boards;
 
-
 	// Use this for initialization
 	void Start ()
     {
@@ -13,5 +12,4 @@ public class BoardsHolder : MonoBehaviour {
             board.SetActive(false);
         }    
 	}
-	
 }

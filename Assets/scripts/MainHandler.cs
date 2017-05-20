@@ -26,6 +26,9 @@ public class MainHandler : MonoBehaviour
     BoardsHolder boards;
     bool moveBoardY;
 
+    //BG Images
+    BgImagesHolder bgImages;
+
     //Slider 
     bool playSound;
     GameObject sliderObj;
@@ -43,13 +46,15 @@ public class MainHandler : MonoBehaviour
         moveBoardY = false;
         boards = GameObject.Find("BoardsHolder").GetComponent<BoardsHolder>();
         boards.boards[levelIndex].SetActive(true);
+        bgImages = GameObject.Find("BGImagesContainer").GetComponent<BgImagesHolder>();
+        bgImages.bgImages[levelIndex].SetActive(true);
         //hole = GameObject.Find("HoleHandler").GetComponent<HoleCollider>();
         //hole = boards.boards[0].GetComponentInChildren<HoleCollider>();
         aSources = GetComponents<AudioSource>();
         bgMusicList = GameObject.Find("BGMusic").GetComponents<AudioSource>();
         bgMusic = aSources[0];
         bgMusic0 = bgMusicList[0];
-
+        RenderSettings.ambientIntensity = 1.0f;
         countVoice3 = aSources[1];
         countVoice2 = aSources[2];
         countVoice1 = aSources[3];
@@ -101,6 +106,7 @@ public class MainHandler : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         //GameObject board = GameObject.Find("Board (1)");
         boards.boards[levelIndex].SetActive(false);
+        bgImages.bgImages[levelIndex].SetActive(false);
         levelIndex += 1;
         levelComplete.gameObject.SetActive(false);
         StartCoroutine(StartCountdown());
@@ -111,6 +117,7 @@ public class MainHandler : MonoBehaviour
     {
         //boards.boards[0].SetActive(true);
         boards.boards[levelIndex].SetActive(true);
+        bgImages.bgImages[levelIndex].SetActive(true);
         hole = boards.boards[levelIndex].GetComponentInChildren<HoleCollider>();
         emptySlider = false;
         if (levelIndex != 0)
