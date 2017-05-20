@@ -35,7 +35,8 @@ public class MainHandler : MonoBehaviour
     Slider slider;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         levelIndex = 0;
         startGameplay = false;
         emptySlider = false;
@@ -63,10 +64,8 @@ public class MainHandler : MonoBehaviour
         sliderAudioComplete = sliderAudio[0];
         sliderAudioRise = sliderAudio[1];
         StartCoroutine(StartCountdown());
-        
+    }
 
-	}
-	
     IEnumerator StartCountdown()
     {
         //boards.boards[levelIndex].SetActive(true);
@@ -83,13 +82,18 @@ public class MainHandler : MonoBehaviour
         yield return new WaitForSeconds(1);
         countDownText.text = "HIT IT!";
         countVoiceHitIt.Play();
-        bgMusicList[levelIndex].Play();
+        try
+        {
+            bgMusicList[levelIndex].Play();
+        }
+        catch (System.IndexOutOfRangeException)
+        {
+            bgMusicList[0].Play();
+        }
         yield return new WaitForSeconds(1);
         textGameObj.SetActive(false);
         startGameplay = true;
         yield break;
-        
-
     }
 
     IEnumerator PrepareNextLevel(float seconds)
@@ -100,7 +104,6 @@ public class MainHandler : MonoBehaviour
         levelIndex += 1;
         levelComplete.gameObject.SetActive(false);
         StartCoroutine(StartCountdown());
-        
         yield break;
     }
 
@@ -124,28 +127,24 @@ public class MainHandler : MonoBehaviour
         levelComplete.gameObject.SetActive(true);
         bgMusicList[levelIndex].Stop();
         StartCoroutine(PrepareNextLevel(2f));
-        
-
     }
 
     void FillSlider()
     {
-            slider.value += Time.deltaTime * 0.5f;
-            if (!sliderAudioRise.isPlaying)
-            {
-                sliderAudioRise.Play();
-            }
+        slider.value += Time.deltaTime * 0.5f;
+        if (!sliderAudioRise.isPlaying)
+        {
+            sliderAudioRise.Play();
+        }
 
-            if (slider.value == 1.0f)
-            {
-                sliderAudioComplete.Play();
-                startGameplay = false;
-                hole.onCollider1 = false;
-                hole.onCollider2 = false;
-                NextLevel();
-
-            }
-           
+        if (slider.value == 1.0f)
+        {
+            sliderAudioComplete.Play();
+            startGameplay = false;
+            hole.onCollider1 = false;
+            hole.onCollider2 = false;
+            NextLevel();
+        }
     }
 
     void EmptySlider()
@@ -153,7 +152,8 @@ public class MainHandler : MonoBehaviour
         slider.value -= Time.deltaTime * 0.5f;
     }
 
-    void Update(){
+    void Update()
+    {
         //Debug.Log(hole.onCollider1 + " " + hole.onCollider2);
         if (startGameplay)
         {
@@ -161,7 +161,8 @@ public class MainHandler : MonoBehaviour
             if (hole.onCollider1 && hole.onCollider2)
             {
                 FillSlider();
-            }else
+            }
+            else
             {
                 sliderAudioRise.Pause();
             }
@@ -180,7 +181,4 @@ public class MainHandler : MonoBehaviour
             }
         }
     }
-
-
-
 }
