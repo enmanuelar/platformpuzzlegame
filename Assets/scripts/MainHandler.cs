@@ -6,6 +6,7 @@ public class MainHandler : MonoBehaviour
 {
     public Text countDownText;
     public float speed = 50.0f;
+    public float accSpeed = 50.0f;
     public int levelIndex;
     GameObject textGameObj;
     Text levelComplete;
@@ -37,10 +38,12 @@ public class MainHandler : MonoBehaviour
     AudioSource sliderAudioRise;
     Slider slider;
 
+    AccelerometerController accController = new AccelerometerController();
+
     // Use this for initialization
     void Start()
     {
-        levelIndex = 0;
+        levelIndex = 3;
         startGameplay = false;
         emptySlider = false;
         moveBoardY = false;
@@ -164,7 +167,8 @@ public class MainHandler : MonoBehaviour
         //Debug.Log(hole.onCollider1 + " " + hole.onCollider2);
         if (startGameplay)
         {
-            transform.Rotate(new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y")) * Time.deltaTime * speed);
+            //transform.Rotate(new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y")) * Time.deltaTime * speed);
+            transform.Rotate(accController.rotatePlatform(accSpeed));
             if (hole.onCollider1 && hole.onCollider2)
             {
                 FillSlider();
