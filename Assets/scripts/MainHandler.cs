@@ -43,7 +43,7 @@ public class MainHandler : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        levelIndex = 3;
+        levelIndex = 0;
         startGameplay = false;
         emptySlider = false;
         moveBoardY = false;
