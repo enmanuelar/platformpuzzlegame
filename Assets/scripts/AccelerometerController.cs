@@ -13,7 +13,7 @@ public class AccelerometerController : MonoBehaviour {
     public Vector3 rotatePlatform (float speed)
     {
         Vector3 tilt = Input.acceleration;
-        Debug.Log(tilt);
+        //Debug.Log(tilt);
         return new Vector3(tilt.x, 0, tilt.y) * Time.deltaTime * speed;
     }
 

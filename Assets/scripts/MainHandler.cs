@@ -168,7 +168,7 @@ public class MainHandler : MonoBehaviour
         if (startGameplay)
         {
             //transform.Rotate(new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y")) * Time.deltaTime * speed);
-            transform.Rotate(accController.rotatePlatform(accSpeed));
+            //transform.Rotate(accController.rotatePlatform(accSpeed));
             if (hole.onCollider1 && hole.onCollider2)
             {
                 FillSlider();
