@@ -40,10 +40,12 @@ public class MainHandler : MonoBehaviour
 
     AccelerometerController accController = new AccelerometerController();
 
+    public ResetButton resetButton;
+
     // Use this for initialization
     void Start()
     {
-        levelIndex = 0;
+        levelIndex = 3;
         startGameplay = false;
         emptySlider = false;
         moveBoardY = false;
@@ -55,8 +57,8 @@ public class MainHandler : MonoBehaviour
         //hole = boards.boards[0].GetComponentInChildren<HoleCollider>();
         aSources = GetComponents<AudioSource>();
         bgMusicList = GameObject.Find("BGMusic").GetComponents<AudioSource>();
-        bgMusic = aSources[0];
-        bgMusic0 = bgMusicList[0];
+        bgMusic = aSources[levelIndex];
+        bgMusic0 = bgMusicList[levelIndex];
         RenderSettings.ambientIntensity = 1.0f;
         countVoice3 = aSources[1];
         countVoice2 = aSources[2];
@@ -123,11 +125,12 @@ public class MainHandler : MonoBehaviour
         bgImages.bgImages[levelIndex].SetActive(true);
         hole = boards.boards[levelIndex].GetComponentInChildren<HoleCollider>();
         emptySlider = false;
-        if (levelIndex != 0)
+        if (levelIndex != 0 && !resetButton.reset)
         {
             moveBoardY = true;
             Destroy(boards.boards[levelIndex - 1]);
         }
+        resetButton.reset = false;
         //hole = GameObject.Find("HoleHandler").GetComponent<HoleCollider>();
     }
 
@@ -167,15 +170,24 @@ public class MainHandler : MonoBehaviour
         //Debug.Log(hole.onCollider1 + " " + hole.onCollider2);
         if (startGameplay)
         {
-            //transform.Rotate(new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y")) * Time.deltaTime * speed);
-            //transform.Rotate(accController.rotatePlatform(accSpeed));
-            if (hole.onCollider1 && hole.onCollider2)
+            if (resetButton.reset)
             {
-                FillSlider();
+                Debug.Log(resetButton.reset);
+                startGameplay = false;
+                StartCoroutine(StartCountdown());
             }
             else
             {
-                sliderAudioRise.Pause();
+                //transform.Rotate(new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y")) * Time.deltaTime * speed);
+                //transform.Rotate(accController.rotatePlatform(accSpeed));
+                if (hole.onCollider1 && hole.onCollider2)
+                {
+                    FillSlider();
+                }
+                else
+                {
+                    sliderAudioRise.Pause();
+                }
             }
         }
         if (emptySlider)
