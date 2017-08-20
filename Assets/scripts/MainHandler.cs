@@ -21,7 +21,7 @@ public class MainHandler : MonoBehaviour
     AudioSource countVoiceHitIt;
     public HoleCollider hole;
     bool startGameplay;
-    bool emptySlider;
+    //bool emptySlider;
 
     //Boards
     BoardsHolder boards;
@@ -31,23 +31,18 @@ public class MainHandler : MonoBehaviour
     BgImagesHolder bgImages;
 
     //Slider 
-    bool playSound;
-    GameObject sliderObj;
-    AudioSource[] sliderAudio;
-    AudioSource sliderAudioComplete;
-    AudioSource sliderAudioRise;
-    Slider slider;
+    bool isFullSlider;
+    SliderHandler slider;
 
     AccelerometerController accController = new AccelerometerController();
-
     public ResetButton resetButton;
 
     // Use this for initialization
     void Start()
     {
-        levelIndex = 3;
+        levelIndex = 0;
         startGameplay = false;
-        emptySlider = false;
+        //emptySlider = false;
         moveBoardY = false;
         boards = GameObject.Find("BoardsHolder").GetComponent<BoardsHolder>();
         boards.boards[levelIndex].SetActive(true);
@@ -67,12 +62,10 @@ public class MainHandler : MonoBehaviour
         textGameObj = GameObject.FindGameObjectWithTag("Text");
         levelComplete = GameObject.FindGameObjectWithTag("Level Complete").GetComponent<Text>();
         levelComplete.gameObject.SetActive(false);
-        playSound = false;
-        sliderObj = GameObject.FindGameObjectWithTag("Slider");
-        slider = sliderObj.GetComponent<Slider>();
-        sliderAudio = sliderObj.GetComponents<AudioSource>();
-        sliderAudioComplete = sliderAudio[0];
-        sliderAudioRise = sliderAudio[1];
+
+        //Slider
+        isFullSlider = false;
+        slider = new SliderHandler();
         StartCoroutine(StartCountdown());
     }
 
@@ -124,7 +117,7 @@ public class MainHandler : MonoBehaviour
         boards.boards[levelIndex].SetActive(true);
         bgImages.bgImages[levelIndex].SetActive(true);
         hole = boards.boards[levelIndex].GetComponentInChildren<HoleCollider>();
-        emptySlider = false;
+        slider.emptySlider = false;
         if (levelIndex != 0 && !resetButton.reset)
         {
             moveBoardY = true;
@@ -136,33 +129,10 @@ public class MainHandler : MonoBehaviour
 
     void NextLevel()
     {
-        emptySlider = true;
+        slider.emptySlider = true;
         levelComplete.gameObject.SetActive(true);
         bgMusicList[levelIndex].Stop();
         StartCoroutine(PrepareNextLevel(2f));
-    }
-
-    void FillSlider()
-    {
-        slider.value += Time.deltaTime * 0.5f;
-        if (!sliderAudioRise.isPlaying)
-        {
-            sliderAudioRise.Play();
-        }
-
-        if (slider.value == 1.0f)
-        {
-            sliderAudioComplete.Play();
-            startGameplay = false;
-            hole.onCollider1 = false;
-            hole.onCollider2 = false;
-            NextLevel();
-        }
-    }
-
-    void EmptySlider()
-    {
-        slider.value -= Time.deltaTime * 0.5f;
     }
 
     void Update()
@@ -182,17 +152,20 @@ public class MainHandler : MonoBehaviour
                 //transform.Rotate(accController.rotatePlatform(accSpeed));
                 if (hole.onCollider1 && hole.onCollider2)
                 {
-                    FillSlider();
+                    isFullSlider = slider.FillSlider(ref hole.onCollider1, ref hole.onCollider2, ref startGameplay);
+                    if (isFullSlider)
+                        NextLevel();
+
                 }
-                else
+                else if (null != slider.sliderAudioRise)
                 {
-                    sliderAudioRise.Pause();
+                    slider.sliderAudioRise.Pause();
                 }
             }
         }
-        if (emptySlider)
+        if (slider.emptySlider)
         {
-            EmptySlider();
+            slider.EmptySlider();
         }
         if (moveBoardY)
         {
