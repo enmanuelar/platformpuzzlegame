@@ -2,39 +2,34 @@
 using System.Collections;
 
 public class RotateMouse : MonoBehaviour {
-    public float speed = 50.0f;
     public bool useJoystick = false;
-    public bool useGyro = false;
+    public bool useGyro = true;
     public VirtualJoystick joystick;
-    GyroController gyroController = new GyroController();
-    private Gyroscope gyro;
+    Vector3 joystickVector;
     Vector3 gyroVector;
-    void Start ()
+    Vector3 mouseVector;
+
+    public RotateMouse ()
     {
-        if (SystemInfo.supportsGyroscope)
-        {
-            Debug.Log("Support gyro");
-            gyro = Input.gyro;
-            gyro.enabled = true;
-        }
+
     }
 
-    // Update is called once per frame
-    void Update () {
-        //Debug.Log(Input.GetAxis("Mouse Y"));
+    public Vector3 GetVector ()
+    {
         if (useJoystick)
         {
-            transform.Rotate(new Vector3(joystick.Horizontal(), 0, joystick.Vertical()) * Time.deltaTime * speed);
+            joystickVector = new Vector3(joystick.Horizontal(), 0, joystick.Vertical());
+            return joystickVector;
         }
-        else if (useGyro && Input.gyro.enabled) 
+        else if (useGyro && Input.gyro.enabled)
         {
             gyroVector = new Vector3(Input.gyro.rotationRateUnbiased.y, 0, Input.gyro.rotationRateUnbiased.x * -1);
-            Debug.Log(gyroVector);
-            transform.Rotate(gyroVector * Time.deltaTime * speed);
+            return gyroVector;
         }
         else
         {
-            transform.Rotate(new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y")) * Time.deltaTime * speed);
+            mouseVector = new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y"));
+            return mouseVector;
         }
     }
 }

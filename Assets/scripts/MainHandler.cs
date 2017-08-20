@@ -37,6 +37,10 @@ public class MainHandler : MonoBehaviour
     AccelerometerController accController = new AccelerometerController();
     public ResetButton resetButton;
 
+    //Gyroscope Control
+    RotateMouse rotatePlatform;
+    private Gyroscope gyro;
+
     // Use this for initialization
     void Start()
     {
@@ -67,6 +71,14 @@ public class MainHandler : MonoBehaviour
         isFullSlider = false;
         slider = new SliderHandler();
         StartCoroutine(StartCountdown());
+
+        //Gyroscope
+        if (SystemInfo.supportsGyroscope)
+        {
+            gyro = Input.gyro;
+            gyro.enabled = true;
+        }
+        rotatePlatform = new RotateMouse();
     }
 
     IEnumerator StartCountdown()
@@ -137,9 +149,10 @@ public class MainHandler : MonoBehaviour
 
     void Update()
     {
-        //Debug.Log(hole.onCollider1 + " " + hole.onCollider2);
         if (startGameplay)
         {
+            Debug.Log(speed);
+            transform.Rotate(rotatePlatform.GetVector() * Time.deltaTime * speed);
             if (resetButton.reset)
             {
                 Debug.Log(resetButton.reset);
@@ -148,8 +161,6 @@ public class MainHandler : MonoBehaviour
             }
             else
             {
-                //transform.Rotate(new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y")) * Time.deltaTime * speed);
-                //transform.Rotate(accController.rotatePlatform(accSpeed));
                 if (hole.onCollider1 && hole.onCollider2)
                 {
                     isFullSlider = slider.FillSlider(ref hole.onCollider1, ref hole.onCollider2, ref startGameplay);
